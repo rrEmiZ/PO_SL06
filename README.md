@@ -1,1 +1,1 @@
-# PS_SL06
+# Programowanie obiektowe - Lab -SL06
