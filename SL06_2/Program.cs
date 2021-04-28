@@ -5,54 +5,59 @@ using Newtonsoft.Json;
 
 namespace SL06_2
 {
-    public class Fruit
+    public class SL06Exception : ApplicationException
     {
-        [JsonProperty(PropertyName = "fruit")]
-        public string Type { get; set; }
-        public string Size { get; set; }
-        public string Color { get; set; }
-    }
+        public int Liczba { get; set; }
 
-    public class Indicator
-    {
-        public string Id { get; set; }
-        public string Value { get; set; }
-    }
+        public SL06Exception(string message, int liczba) : base(message) => Liczba = liczba;
 
-    public class Country
-    {
-        public string Id { get; set; }
-        public string Value { get; set; }
     }
-
-    public class Statistisc
-    {
-        public Indicator Indicator { get; set; }
-        public Country Country { get; set; }
-        public string Value { get; set; }
-        public string Decimal { get; set; }
-        public string Date { get; set; }
-    }
-
 
     class Program
     {
         static void Main(string[] args)
         {
-            var list = new List<Fruit>();
-
-            //Otwieramy stream pliku sample.txt
-            using (var sr = new StreamReader("sample.json"))
+            int x = Convert.ToInt32(Console.ReadLine());
+            try
             {
-                var line = sr.ReadToEnd();
+                if (x == 0)
+                    throw new NullReferenceException("Błędna liczba");
 
-                list = JsonConvert.DeserializeObject<List<Fruit>>(line);
+                int y = 100 / x;
+            }
+            catch (SL06Exception e)
+            {
+                Console.WriteLine($"{e.Message}, podana liczba to {e.Liczba}");
+            }
+            catch (ArithmeticException e)
+            {
+                Console.WriteLine($"ArithmeticException Handler: {e}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Generic Exception Handler: {e}");
             }
 
-          
+            var zmienna1 = string.Empty;
+            try
+            {
+                SomeFunc();
+            }
+            catch (Exception e)
+            {
+                zmienna1 = e.Message;
+            }
 
+
+            Console.ReadLine();
         }
 
+        static string SomeFunc()
+        {
+
+            throw new Exception("jakis string");
+
+        }
 
 
     }
