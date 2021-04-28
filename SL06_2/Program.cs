@@ -17,6 +17,7 @@ namespace SL06_2
     {
         static void Main(string[] args)
         {
+            //Testowy issue rozwiaznie
             int x = Convert.ToInt32(Console.ReadLine());
             try
             {
