@@ -2,63 +2,96 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace SL06_2
 {
-    public class SL06Exception : ApplicationException
+    public class Student
     {
-        public int Liczba { get; set; }
-
-        public SL06Exception(string message, int liczba) : base(message) => Liczba = liczba;
-
+        public int Id { get; set; }
+        public string NrAlbumu { get; set; }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            //Testowy issue rozwiaznie
-            int x = Convert.ToInt32(Console.ReadLine());
+            string connectionString = @"Data source=.\SQLExpress;database=programowanieOb;Trusted_Connection=True";
+            SqlConnection connection = new SqlConnection(connectionString);
+            var list = new List<Student>();
             try
             {
-                if (x == 0)
-                    throw new NullReferenceException("Błędna liczba");
 
-                int y = 100 / x;
-            }
-            catch (SL06Exception e)
-            {
-                Console.WriteLine($"{e.Message}, podana liczba to {e.Liczba}");
-            }
-            catch (ArithmeticException e)
-            {
-                Console.WriteLine($"ArithmeticException Handler: {e}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Generic Exception Handler: {e}");
-            }
+                connection.Open();
+                //Dodawanie
+    //            {
+    //                var studentNrAlbumu = "12345";
+    //                SqlCommand cmd = connection.CreateCommand();
+    //                cmd.CommandType = CommandType.Text;
+    //                string commandText = @"
+    //INSERT INTO[dbo].[students]
+    //       ([Nazwisko]
+    //       ,[Imie]
+    //       ,[NrAlbumu]
+    //       ,[Grupa])
+    // VALUES
+    //       (@nazwisko
+    //       ,@imie
+    //       ,@nrAlbumu
+    //       ,@grupa)";
+    //                cmd.CommandText = commandText;
+    //                cmd.Parameters.Add(new SqlParameter("@nazwisko", "Nowak2"));
+    //                cmd.Parameters.Add(new SqlParameter("@imie", "Janusz2"));
+    //                cmd.Parameters.Add(new SqlParameter("@nrAlbumu", "w500382"));
+    //                cmd.Parameters.AddWithValue("@grupa", "SL062");
+    //                int result = cmd.ExecuteNonQuery();
+    //            }
 
-            var zmienna1 = string.Empty;
-            try
-            {
-                SomeFunc();
-            }
-            catch (Exception e)
-            {
-                zmienna1 = e.Message;
-            }
+                {
+                    SqlCommand sqlCommand = new SqlCommand();// connection.CreateCommand();
+                    sqlCommand.Connection = connection;
+                    sqlCommand.CommandText = "SELECT * FROM students"; // WHERE Id = @jakiesId";
+                //    sqlCommand.Parameters.Add(new SqlParameter("@jakiesId", 2));
 
+                    using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                    {
+                        Console.WriteLine("Wiersze znajdujące się w tabeli students:");
+                        while (reader.Read())
+                        {
+                            list.Add(new Student()
+                            {
+                                Id = (int)reader[0],
+                                NrAlbumu = reader["NrAlbumu"].ToString()
+                            });
+
+
+                           // Console.WriteLine(
+                           //     reader[0].ToString() + " " +
+                           //     reader["Nazwisko"].ToString() + " " +
+                           //reader["Imie"].ToString() + " "
+                           //+ reader["NrAlbumu"].ToString() + " " +
+                           //reader["Grupa"].ToString());
+                        }
+                    }
+                }
+                // reader.Close();
+
+                Console.ReadKey();
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("error");
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
 
             Console.ReadLine();
         }
 
-        static string SomeFunc()
-        {
-
-            throw new Exception("jakis string");
-
-        }
 
 
     }
