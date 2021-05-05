@@ -17,7 +17,7 @@ namespace SL06_2
     {
         static void Main(string[] args)
         {
-            string connectionString = @"Data source=.\SQLExpress;database=programowanieOb;Trusted_Connection=True";
+            string connectionString = @"Data source=.\SQLExpress;database=programowanieOb;User Id=sl06;Password=P@$$w0rd;";
             SqlConnection connection = new SqlConnection(connectionString);
             var list = new List<Student>();
             try
@@ -59,19 +59,19 @@ namespace SL06_2
                         Console.WriteLine("Wiersze znajdujące się w tabeli students:");
                         while (reader.Read())
                         {
-                            list.Add(new Student()
-                            {
-                                Id = (int)reader[0],
-                                NrAlbumu = reader["NrAlbumu"].ToString()
-                            });
+                            //list.Add(new Student()
+                            //{
+                            //    Id = (int)reader[0],
+                            //    NrAlbumu = reader["NrAlbumu"].ToString()
+                            //});
 
 
-                           // Console.WriteLine(
-                           //     reader[0].ToString() + " " +
-                           //     reader["Nazwisko"].ToString() + " " +
-                           //reader["Imie"].ToString() + " "
-                           //+ reader["NrAlbumu"].ToString() + " " +
-                           //reader["Grupa"].ToString());
+                            Console.WriteLine(
+                                reader[0].ToString() + " " +
+                                reader["Nazwisko"].ToString() + " " +
+                           reader["Imie"].ToString() + " "
+                           + reader["NrAlbumu"].ToString() + " " +
+                           reader["Grupa"].ToString());
                         }
                     }
                 }
