@@ -19,101 +19,33 @@ namespace SL06_2
         public string Imie { get; set; }
     }
 
+    public class StudentKeysNazwisko
+    {
+        public int Id { get; set; }
+        public string Nazwisko { get; set; }
+    }
+
+
     class Program
     {
         static void Main(string[] args)
         {
             var students = GetStudentsFromDB();
 
-            Export(students);
 
-            var studentsImported = Import();
+            var anyTest = students.Any();
+
+            var studentsSelectEx = students.Where(x => x.Id % 2 == 0 || x.Nazwisko.StartsWith('K'))
+                .Select(x => new StudentKeysNazwisko()
+                {
+                    Id = x.Id,
+                    Nazwisko = x.Nazwisko
+                }).ToList();
 
 
             Console.ReadLine();
         }
 
-        private static List<Student> Import()
-        {
-            bool useXlsx = false;
-            var students = new List<Student>();
-            try
-            {
-                using (FileStream stream = new FileStream("export.xls", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-                {
-                    IWorkbook workbook;
-                    if (useXlsx)
-                        workbook = new XSSFWorkbook(stream);
-                    else
-                        workbook = new HSSFWorkbook(stream);
-
-                    var sheet = workbook.GetSheet("Ark1");
-
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
-                    {
-                        var rowObj = sheet.GetRow(row);
-                        if(rowObj != null)
-                        {
-                            students.Add(new Student()
-                            {
-                                Id = Convert.ToInt32(rowObj.GetCell(0).NumericCellValue),
-                                Nazwisko = rowObj.GetCell(1).StringCellValue
-                            });
-                        }
-
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return students;
-        }
-
-        private static void Export(List<Student> students)
-        {
-            bool useXlsx = false;
-
-            IWorkbook workbook;
-            if (useXlsx)
-                workbook = new XSSFWorkbook();
-            else
-                workbook = new HSSFWorkbook();
-
-            var sheet = workbook.CreateSheet("Ark1");
-
-            int rowIdx = 0;
-            foreach (var student in students)
-            {
-                var row = sheet.CreateRow(rowIdx++);
-                int colIdx = 0;
-                {
-                    var cell = row.CreateCell(colIdx++);
-                    cell.SetCellValue(student.Id);
-                }
-                {
-                    var cell = row.CreateCell(colIdx++);
-                    cell.SetCellValue(student.Nazwisko);
-                }
-                {
-                    var cell = row.CreateCell(colIdx++);
-                    cell.SetCellValue(student.Imie);
-                }
-                {
-                    var cell = row.CreateCell(colIdx++);
-                    cell.SetCellValue(student.NrAlbumu);
-                }
-
-            }
-
-
-            using (FileStream stream = new FileStream("export.xls", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                workbook.Write(stream);
-            }
-        }
 
         static List<Student> GetStudentsFromDB()
         {
