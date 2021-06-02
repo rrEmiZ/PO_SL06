@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleAppCore.DbModels;
 
@@ -9,7 +10,7 @@ namespace ConsoleAppCore
         static void Main(string[] args)
         {
 
-            using(var db = new BikeStoresContext())
+            using (var db = new BikeStoresContext())
             {
                 //var items = db.Brands.ToList();
 
@@ -26,7 +27,7 @@ namespace ConsoleAppCore
                 //db.SaveChanges();
 
 
-                using(var trans = db.Database.BeginTransaction())
+                using (var trans = db.Database.BeginTransaction())
                 {
                     var brand = new Brand()
                     {
@@ -55,10 +56,53 @@ namespace ConsoleAppCore
                 }
 
 
+                var products = db.Products.ToList();
+
+
 
             }
-            
+
             Console.ReadLine();
         }
+
+        static List<ProductDto> GetProducts(DateTime date)
+        {
+            using (var db = new BikeStoresContext())
+            {
+                var disconts = db.Discounts.Where(x => x.DateFrom >= date && x.DateTo <= date).ToList();
+
+                var products = db.Products.ToList();
+
+
+                return products.Select(p =>
+               {
+                   var dto = new ProductDto()
+                   {
+                       Name = p.ProductName
+                   };
+
+                   if (disconts.Any(d => d.ProductId == p.ProductId || d.BrandId == p.BrandId || d.CategoryId == p.CategoryId))
+                   {
+                       if(disconts.Any(d => d.ProductId == p.ProductId))
+                       {
+                           var discount = disconts.FirstOrDefault(d => d.ProductId == p.ProductId);
+
+                           dto.Price = p.ListPrice - (p.ListPrice * discount.DicountProcent);
+                       }
+
+                       //Brand ..
+
+
+                       //Category..
+                   }
+
+
+                   return dto;
+               }).ToList();              
+
+
+            }
+        }
+
     }
 }
