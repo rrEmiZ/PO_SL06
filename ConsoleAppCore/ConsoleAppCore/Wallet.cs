@@ -6,9 +6,11 @@ namespace ConsoleAppCore
 {
     public class Wallet
     {
-        private int _saldo;
+        public int _saldo;
 
         public int Saldo { get => _saldo; }
+
+        public string Test { get; set; } = "TESTOWE";
 
         public Wallet(int saldo)
         {
