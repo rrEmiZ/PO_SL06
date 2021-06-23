@@ -62,19 +62,7 @@ namespace ConsoleAppCore.Migrations
             //        table.PrimaryKey("PK_customers", x => x.customer_id);
             //    });
 
-            //migrationBuilder.CreateTable(
-            //    name: "Discounts",
-            //    columns: table => new
-            //    {
-            //        Id = table.Column<int>(type: "int", nullable: false)
-            //            .Annotation("SqlServer:Identity", "1, 1"),
-            //        Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-            //        Code = table.Column<string>(type: "nvarchar(max)", nullable: true)
-            //    },
-            //    constraints: table =>
-            //    {
-            //        table.PrimaryKey("PK_Discounts", x => x.Id);
-            //    });
+            
 
             //migrationBuilder.CreateTable(
             //    name: "stores",
