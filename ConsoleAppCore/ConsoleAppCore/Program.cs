@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ConsoleAppCore.DbModels;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ConsoleAppCore
 {
@@ -11,45 +13,34 @@ namespace ConsoleAppCore
     {
         static async Task Main(string[] args)
         {
-            try
+            var requestService = new RequestService();
+
+            //var items = await requestService.GetAsync<List<Post>>("https://jsonplaceholder.typicode.com/posts");
+
+            //var item = await requestService.GetAsync<Post>("https://jsonplaceholder.typicode.com/posts/1");
+
+            var newItem = new Post()
             {
+                Body = "test",
+                Title = "test",
+                UserId = 1
+            };
+
+            var result = await requestService.PostAsync("https://jsonplaceholder.typicode.com/posts", newItem);
 
 
-                var products = await GetProductDtos(DateTime.Today);
-            }
-            catch (Exception)
-            {
+            //var client = new HttpClient();
 
-                throw;
-            }
+            //HttpResponseMessage response = await client.GetAsync("https://jsonplaceholder.typicode.com/posts");
 
-            //Coffee cup = PourCoffee();
-            //Console.WriteLine("coffee is ready");
-
-            //Task<Egg> eggsTask = FryEggsAsync(2);
-            //Task<Bacon> baconTask = FryBaconAsync(3);
-            //var toastTask = MakeToastWithButterAndJamAsync(2);
-
-            //var breakfastTasks = new List<Task> { eggsTask, baconTask, toastTask };
-
-            //while (breakfastTasks.Count > 0)
+            //if(!response.IsSuccessStatusCode)
             //{
-            //    Task finishedTask = await Task.WhenAny(breakfastTasks);
-            //    if (finishedTask == eggsTask)
-            //    {
-            //        Console.WriteLine("eggs are ready");
-            //    }
-            //    else if (finishedTask == baconTask)
-            //    {
-            //        Console.WriteLine("bacon is ready");
-            //    }
-            //    else if (finishedTask == toastTask)
-            //    {
-            //        Console.WriteLine("toast is ready");
-            //    }
-            //    breakfastTasks.Remove(finishedTask);
+            //    Console.WriteLine("Wystapil blad - " + response.StatusCode.ToString());
             //}
 
+            //var content = await response.Content.ReadAsStringAsync();
+
+            //var posts = JsonConvert.DeserializeObject<List<Post>>(content);
 
             Console.ReadLine();
         }
@@ -116,10 +107,10 @@ namespace ConsoleAppCore
             return new Egg();
         }
 
-        private static Coffee PourCoffee()
+        private static async Task<Coffee> PourCoffee()
         {
             Console.WriteLine("Pouring coffee");
-            return new Coffee();
+            return  new Coffee();
         }
 
         //static void Main(string[] args)
